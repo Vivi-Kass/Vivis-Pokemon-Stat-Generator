@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox Name="inputBox" HorizontalAlignment="Left" Margin="25,22,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyDown="inputBox_KeyDown"/>
-        <TextBlock Name="outputBox" HorizontalAlignment="Left" Margin="25,77,0,0" TextWrapping="Wrap" Text="Output" VerticalAlignment="Top"/>
+        <TextBox Name="InputBox" HorizontalAlignment="Left" Margin="25,22,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" KeyDown="inputBox_KeyDown"/>
+        <TextBlock Name="OutputBox" HorizontalAlignment="Left" Margin="25,77,0,0" TextWrapping="Wrap" Text="Output" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

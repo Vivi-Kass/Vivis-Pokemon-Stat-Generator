@@ -20,8 +20,18 @@ namespace Vivi_s_Pokemon_Stat_Generator
     {
         private const int numberOfStats = 6; //hp, at, def, sp-at, sp-def, spd
 
+        private class PokemonData
+        {
+            public Pokemon pokemon;
+            public Exception exception;
+            public PokemonData(Pokemon inputPokemon, Exception inputException) 
+            {
+                pokemon = inputPokemon;
+                exception = inputException;
+            }
+        }
 
-        PokeApiClient pokeClient = new PokeApiClient();
+        private readonly PokeApiClient pokeClient = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -39,28 +49,28 @@ namespace Vivi_s_Pokemon_Stat_Generator
             if (e.Key == Key.Enter)
             {
                 //inform user of loading
-                outputBox.Text = "Loading";
+                OutputBox.Text = "Loading";
 
                 //get our pokemon data
-                Pokemon pokemon = await GetPokemonAsync(inputBox.Text);
+                PokemonData pokemonData = await GetPokemonAsync(InputBox.Text);
 
-                if (pokemon != null) //if null it was never populated and an exception occured
+                if (pokemonData.exception == null) //if an exception did not occur
                 {
                     //clear the text box
-                    outputBox.Text = "";
+                    OutputBox.Text = "";
 
                     //fill with data
                     for (int iterator = 0; iterator < numberOfStats; iterator++)
                     {
-                        int statValue = pokemon.Stats[iterator].BaseStat;
-                        String statName = pokemon.Stats[iterator].Stat.Name;
-                        outputBox.Text += $"{statName}: {statValue}\n";
+                        int statValue = pokemonData.pokemon.Stats[iterator].BaseStat;
+                        String statName = pokemonData.pokemon.Stats[iterator].Stat.Name;
+                        OutputBox.Text += $"{statName}: {statValue}\n";
                     }
                                        
                 }
                 else //pokemon not found
                 {
-                    outputBox.Text = "Pokemon not found";
+                    OutputBox.Text = pokemonData.exception.Message.ToString();
                 }
             }
         }
@@ -72,19 +82,22 @@ namespace Vivi_s_Pokemon_Stat_Generator
         * Parameters: String pokemonName
         * Returns: Pokemon data
         */
-        private async Task<Pokemon> GetPokemonAsync(String pokemonName)
+        private async Task<PokemonData> GetPokemonAsync(String pokemonName)
         {
             Pokemon pokemon = null; //start null
+            Exception exception = null;
             try
             {
                 pokemon = await pokeClient.GetResourceAsync<Pokemon>(pokemonName); //search for pokemon
             }
             catch(Exception ex)
             {
-                
+                exception = ex;
             }
-            
-            return pokemon;
+
+            PokemonData data = new(pokemon, exception);
+
+            return data;
         }
 
         /*
